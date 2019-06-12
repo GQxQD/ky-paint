@@ -1,9 +1,9 @@
-import {KyPaintOptions} from "./types/ky-paint";
-import Point from "./utils/point";
-import KyPaintObject from "./components/ky-paint-object";
-import KyPaintRect from "./components/ky-paint-rect";
+import {KyPaintOptions} from './types/ky-paint';
+import Point from './utils/point';
+import KyPaintObject from './components/ky-paint-object';
+import KyPaintRect from './components/ky-paint-rect';
 import Timeout = NodeJS.Timeout;
-import KyPaintCircle from "./components/ky-paint-circle";
+import KyPaintCircle from './components/ky-paint-circle';
 
 class KyPaint {
 
@@ -46,12 +46,10 @@ class KyPaint {
             self.$selected = null;
             const {offsetX, offsetY} = e;
             const clickPoint = new Point(offsetX, offsetY);
-            console.log(clickPoint);
             let hitIndex = -1;
             for (let i = self.$layouts.length - 1; i >= 0; i--) {
                 const obj = self.$layouts[i];
                 if (obj.isHit(clickPoint) && hitIndex < 0) {
-                    console.log(obj);
                     self.$selected = obj;
                     self.$objPoint = new Point(obj.getPosition().x, obj.getPosition().y);
                     self.$selectedPoint = new Point(offsetX, offsetY);
@@ -83,6 +81,19 @@ class KyPaint {
             if (self.$isMouseDown && self.$selected) {
                 const {offsetX, offsetY} = e;
                 self.$selected.moveTo(new Point(offsetX - self.$selectedPoint.x + self.$objPoint.x, offsetY - self.$selectedPoint.y + self.$objPoint.y));
+            } else if (!self.$selected) {
+                const {offsetX, offsetY} = e;
+                const clickPoint = new Point(offsetX, offsetY);
+                let hitIndex = -1;
+                for (let i = self.$layouts.length - 1; i >= 0; i--) {
+                    const obj = self.$layouts[i];
+                    if (obj.isHit(clickPoint) && hitIndex < 0) {
+                        hitIndex = i;
+                        obj.setHighlight(true);
+                    } else {
+                        obj.setHighlight(false);
+                    }
+                }
             }
         });
     }
@@ -118,7 +129,7 @@ class KyPaint {
             y: 0,
             width: this.$options.width,
             height: this.$options.height,
-            fill: this.$options.backgroundColor
+            fill: this.$options.backgroundColor,
         });
         bc.setPaint(this);
         bc.draw();
@@ -149,7 +160,7 @@ class KyPaint {
 Object.defineProperty(window, 'KyPaint', {
     get() {
         return KyPaint;
-    }
+    },
 });
 
 export default KyPaint;

@@ -1,8 +1,16 @@
-import Point from "../utils/point";
-import KyPaint from "../ky-paint";
-import Position from "../utils/position";
+import Point from '../utils/point';
+import KyPaint from '../ky-paint';
+import Position from '../utils/position';
+import {KyPaintObjectOptions} from '../types/ky-paint-object';
 
 abstract class KyPaintObject {
+    // 高亮边框颜色
+    protected readonly hlStroke: string = '#70fff5';
+    // 高亮填充颜色
+    protected readonly hlFill: string = 'rgba(112,255,245,.2)';
+    // 字体
+    protected readonly fontFamily: string = 'msyh';
+    protected options: KyPaintObjectOptions;
     private position: Position;
     protected paint: KyPaint;
     protected ctx: CanvasRenderingContext2D;
@@ -31,6 +39,8 @@ abstract class KyPaintObject {
     public moveTo(point: Point) {
         this.position.x = point.x;
         this.position.y = point.y;
+        this.options.x = point.x;
+        this.options.y = point.y;
         this.paint.repaint();
     }
 

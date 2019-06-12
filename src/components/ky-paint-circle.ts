@@ -1,9 +1,9 @@
-import KyPaintObject from "./ky-paint-object";
-import Point from "../utils/point";
-import {KyPaintCircleOptions} from "../types/ky-paint-circle";
+import KyPaintObject from './ky-paint-object';
+import Point from '../utils/point';
+import {KyPaintCircleOptions} from '../types/ky-paint-circle';
 
 class KyPaintCircle extends KyPaintObject {
-    private readonly options: KyPaintCircleOptions;
+    protected readonly options: KyPaintCircleOptions;
 
     public constructor(options: KyPaintCircleOptions) {
         const {x, y, radius} = options;
@@ -33,22 +33,19 @@ class KyPaintCircle extends KyPaintObject {
         }
     }
 
-    public moveTo(point: Point) {
-        this.options.x = point.x;
-        this.options.y = point.y;
-        super.moveTo(point);
-    }
-
     public highlight(): void {
-        const {strokeStyle} = this.ctx;
+        const {strokeStyle, fillStyle} = this.ctx;
         const {x, y, radius} = this.options;
-        this.ctx.strokeStyle = '#ffce19';
-        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = this.hlStroke;
         this.ctx.beginPath();
         this.ctx.arc(x, y, radius + 1, 0, 2 * Math.PI);
         this.ctx.stroke();
         this.ctx.strokeStyle = strokeStyle;
-        this.ctx.lineWidth = 1;
+        this.ctx.fillStyle = this.hlFill;
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        this.ctx.fill();
+        this.ctx.fillStyle = fillStyle;
     }
 
     public isHit(point: Point): boolean {
